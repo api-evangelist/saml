@@ -1,0 +1,15 @@
+name: SAML
+description: SAML (Security Assertion Markup Language) is an XML-based open standard
+  for exchanging authentication and authorization data between identity providers
+  and service providers. It enables single sign-on (SSO) across different applications
+  and domains, reducing the need for users to manage multiple sets of credentials.
+url: https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language
+tags:
+- Authentication
+- Security
+- SSO
+- Identity Management
+created: '2025'
+modified: '2025'
+apis: []
+common: []
