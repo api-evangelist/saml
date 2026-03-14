@@ -1,0 +1,324 @@
+{
+  "$id": "saml-entity-descriptor.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SAML 2.0 EntityDescriptor Metadata",
+  "description": "Schema describing the JSON representation of a SAML 2.0 EntityDescriptor metadata element as defined in the OASIS SAML 2.0 Metadata specification (saml-metadata-2.0-os). Describes the entity's identity, supported roles, endpoints, and cryptographic keys.",
+  "type": "object",
+  "required": [
+    "entityID"
+  ],
+  "properties": {
+    "entityID": {
+      "type": "string",
+      "format": "uri",
+      "description": "The unique identifier for the SAML entity. MUST be a URI of no more than 1024 characters.",
+      "maxLength": 1024
+    },
+    "validUntil": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The expiration time of the metadata. After this time, the metadata SHOULD be considered invalid."
+    },
+    "cacheDuration": {
+      "type": "string",
+      "description": "The maximum time the metadata consumer should cache the metadata, expressed as an XML duration (e.g., PT24H for 24 hours).",
+      "pattern": "^P(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$"
+    },
+    "ID": {
+      "type": "string",
+      "description": "An optional document-unique identifier for the element, used for XML signature references."
+    },
+    "IDPSSODescriptor": {
+      "$ref": "#/$defs/IDPSSODescriptor"
+    },
+    "SPSSODescriptor": {
+      "$ref": "#/$defs/SPSSODescriptor"
+    },
+    "Organization": {
+      "$ref": "#/$defs/Organization"
+    },
+    "ContactPerson": {
+      "type": "array",
+      "description": "Contact information for the entity.",
+      "items": {
+        "$ref": "#/$defs/ContactPerson"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "IDPSSODescriptor": {
+      "type": "object",
+      "title": "IDPSSODescriptor",
+      "description": "Describes the SSO capabilities and endpoints of an Identity Provider as defined in SAML 2.0 Metadata Section 2.4.3.",
+      "required": [
+        "protocolSupportEnumeration",
+        "SingleSignOnService"
+      ],
+      "properties": {
+        "protocolSupportEnumeration": {
+          "type": "array",
+          "description": "The SAML protocol URIs supported by this role.",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "examples": [
+            ["urn:oasis:names:tc:SAML:2.0:protocol"]
+          ]
+        },
+        "WantAuthnRequestsSigned": {
+          "type": "boolean",
+          "description": "Indicates whether the Identity Provider requires that AuthnRequest messages be signed.",
+          "default": false
+        },
+        "SingleSignOnService": {
+          "type": "array",
+          "description": "The SSO endpoints supported by the Identity Provider.",
+          "items": {
+            "$ref": "#/$defs/Endpoint"
+          }
+        },
+        "SingleLogoutService": {
+          "type": "array",
+          "description": "The Single Logout endpoints supported by the Identity Provider.",
+          "items": {
+            "$ref": "#/$defs/Endpoint"
+          }
+        },
+        "NameIDFormat": {
+          "type": "array",
+          "description": "The NameID formats supported by the Identity Provider.",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "examples": [
+            [
+              "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+              "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+              "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+            ]
+          ]
+        },
+        "KeyDescriptor": {
+          "type": "array",
+          "description": "Cryptographic keys used for signing and encryption.",
+          "items": {
+            "$ref": "#/$defs/KeyDescriptor"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "SPSSODescriptor": {
+      "type": "object",
+      "title": "SPSSODescriptor",
+      "description": "Describes the SSO capabilities and endpoints of a Service Provider as defined in SAML 2.0 Metadata Section 2.4.4.",
+      "required": [
+        "protocolSupportEnumeration",
+        "AssertionConsumerService"
+      ],
+      "properties": {
+        "protocolSupportEnumeration": {
+          "type": "array",
+          "description": "The SAML protocol URIs supported by this role.",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "AuthnRequestsSigned": {
+          "type": "boolean",
+          "description": "Indicates whether AuthnRequest messages sent by this Service Provider are signed.",
+          "default": false
+        },
+        "WantAssertionsSigned": {
+          "type": "boolean",
+          "description": "Indicates whether the Service Provider requires that assertions be signed.",
+          "default": false
+        },
+        "AssertionConsumerService": {
+          "type": "array",
+          "description": "The Assertion Consumer Service endpoints where the IdP should send SAML Responses.",
+          "items": {
+            "$ref": "#/$defs/IndexedEndpoint"
+          }
+        },
+        "SingleLogoutService": {
+          "type": "array",
+          "description": "The Single Logout endpoints supported by the Service Provider.",
+          "items": {
+            "$ref": "#/$defs/Endpoint"
+          }
+        },
+        "NameIDFormat": {
+          "type": "array",
+          "description": "The NameID formats supported by the Service Provider.",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "KeyDescriptor": {
+          "type": "array",
+          "description": "Cryptographic keys used for signing and encryption.",
+          "items": {
+            "$ref": "#/$defs/KeyDescriptor"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "Endpoint": {
+      "type": "object",
+      "title": "Endpoint",
+      "description": "A SAML protocol endpoint with a binding and location.",
+      "required": [
+        "Binding",
+        "Location"
+      ],
+      "properties": {
+        "Binding": {
+          "type": "string",
+          "format": "uri",
+          "description": "The SAML binding URI for this endpoint.",
+          "examples": [
+            "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+            "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+          ]
+        },
+        "Location": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URI where messages should be sent."
+        },
+        "ResponseLocation": {
+          "type": "string",
+          "format": "uri",
+          "description": "An optional URI where response messages should be sent, if different from Location."
+        }
+      },
+      "additionalProperties": true
+    },
+    "IndexedEndpoint": {
+      "type": "object",
+      "title": "IndexedEndpoint",
+      "description": "An endpoint with an index and optional default designation, used for ACS endpoints.",
+      "required": [
+        "Binding",
+        "Location",
+        "index"
+      ],
+      "properties": {
+        "Binding": {
+          "type": "string",
+          "format": "uri",
+          "description": "The SAML binding URI for this endpoint."
+        },
+        "Location": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URI where messages should be sent."
+        },
+        "index": {
+          "type": "integer",
+          "description": "A non-negative integer index for this endpoint.",
+          "minimum": 0
+        },
+        "isDefault": {
+          "type": "boolean",
+          "description": "Indicates whether this is the default endpoint when no index is specified."
+        }
+      },
+      "additionalProperties": true
+    },
+    "KeyDescriptor": {
+      "type": "object",
+      "title": "KeyDescriptor",
+      "description": "Describes a cryptographic key used for signing or encryption.",
+      "properties": {
+        "use": {
+          "type": "string",
+          "description": "The purpose of the key: signing or encryption.",
+          "enum": [
+            "signing",
+            "encryption"
+          ]
+        },
+        "KeyInfo": {
+          "type": "object",
+          "description": "The key information containing the X.509 certificate or other key material.",
+          "properties": {
+            "X509Data": {
+              "type": "object",
+              "properties": {
+                "X509Certificate": {
+                  "type": "string",
+                  "description": "The base64-encoded X.509 certificate."
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "Organization": {
+      "type": "object",
+      "title": "Organization",
+      "description": "Information about the organization responsible for the SAML entity.",
+      "properties": {
+        "OrganizationName": {
+          "type": "string",
+          "description": "The human-readable name of the organization."
+        },
+        "OrganizationDisplayName": {
+          "type": "string",
+          "description": "The display name of the organization for user interfaces."
+        },
+        "OrganizationURL": {
+          "type": "string",
+          "format": "uri",
+          "description": "A URL for more information about the organization."
+        }
+      },
+      "additionalProperties": true
+    },
+    "ContactPerson": {
+      "type": "object",
+      "title": "ContactPerson",
+      "description": "Contact information for a person associated with the SAML entity.",
+      "required": [
+        "contactType"
+      ],
+      "properties": {
+        "contactType": {
+          "type": "string",
+          "description": "The type of contact.",
+          "enum": [
+            "technical",
+            "support",
+            "administrative",
+            "billing",
+            "other"
+          ]
+        },
+        "GivenName": {
+          "type": "string",
+          "description": "The given name of the contact person."
+        },
+        "SurName": {
+          "type": "string",
+          "description": "The surname of the contact person."
+        },
+        "EmailAddress": {
+          "type": "string",
+          "format": "email",
+          "description": "The email address of the contact person."
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

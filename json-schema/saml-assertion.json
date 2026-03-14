@@ -1,0 +1,212 @@
+{
+  "$id": "saml-assertion.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SAML 2.0 Assertion",
+  "description": "Schema describing the JSON representation of a SAML 2.0 Assertion as defined in OASIS SAML 2.0 Core Section 2. An assertion is a package of information that supplies one or more statements made by a SAML authority (typically an Identity Provider).",
+  "type": "object",
+  "required": [
+    "Version",
+    "ID",
+    "IssueInstant",
+    "Issuer"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "description": "The SAML version of the assertion. MUST be '2.0'.",
+      "const": "2.0"
+    },
+    "ID": {
+      "type": "string",
+      "description": "A unique identifier for the assertion."
+    },
+    "IssueInstant": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The time instant of issuance in UTC."
+    },
+    "Issuer": {
+      "type": "string",
+      "description": "The SAML authority that created and is responsible for the assertion. Typically the entityID of the Identity Provider."
+    },
+    "Subject": {
+      "type": "object",
+      "description": "The principal that is the subject of the statements in the assertion.",
+      "properties": {
+        "NameID": {
+          "type": "object",
+          "description": "The name identifier for the subject.",
+          "properties": {
+            "Format": {
+              "type": "string",
+              "format": "uri",
+              "description": "The format of the name identifier."
+            },
+            "SPNameQualifier": {
+              "type": "string",
+              "description": "The Service Provider or affiliation that the identifier is scoped to."
+            },
+            "value": {
+              "type": "string",
+              "description": "The actual name identifier value."
+            }
+          }
+        },
+        "SubjectConfirmation": {
+          "type": "array",
+          "description": "Information allowing the subject to be confirmed.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Method": {
+                "type": "string",
+                "format": "uri",
+                "description": "The confirmation method URI.",
+                "examples": [
+                  "urn:oasis:names:tc:SAML:2.0:cm:bearer"
+                ]
+              },
+              "SubjectConfirmationData": {
+                "type": "object",
+                "properties": {
+                  "InResponseTo": {
+                    "type": "string",
+                    "description": "The ID of the AuthnRequest this assertion is in response to."
+                  },
+                  "Recipient": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The URI of the entity to which the assertion is addressed."
+                  },
+                  "NotOnOrAfter": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The time instant after which the subject can no longer be confirmed."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "Conditions": {
+      "type": "object",
+      "description": "Conditions that MUST be evaluated when assessing the validity of the assertion.",
+      "properties": {
+        "NotBefore": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The assertion MUST NOT be used before this time instant."
+        },
+        "NotOnOrAfter": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The assertion MUST NOT be used on or after this time instant."
+        },
+        "AudienceRestriction": {
+          "type": "array",
+          "description": "The set of audiences that the assertion is intended for.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Audience": {
+                "type": "array",
+                "description": "URIs identifying intended audiences.",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "AuthnStatement": {
+      "type": "array",
+      "description": "Statements about the authentication event.",
+      "items": {
+        "type": "object",
+        "required": [
+          "AuthnInstant",
+          "AuthnContext"
+        ],
+        "properties": {
+          "AuthnInstant": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time at which the authentication took place."
+          },
+          "SessionIndex": {
+            "type": "string",
+            "description": "The index of the session at the Identity Provider."
+          },
+          "SessionNotOnOrAfter": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time at which the session expires."
+          },
+          "AuthnContext": {
+            "type": "object",
+            "description": "The context of the authentication event.",
+            "properties": {
+              "AuthnContextClassRef": {
+                "type": "string",
+                "format": "uri",
+                "description": "A URI reference identifying the authentication context class.",
+                "examples": [
+                  "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "AttributeStatement": {
+      "type": "array",
+      "description": "Statements containing attributes about the subject.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Attribute": {
+            "type": "array",
+            "description": "The attributes associated with the subject.",
+            "items": {
+              "type": "object",
+              "required": [
+                "Name"
+              ],
+              "properties": {
+                "Name": {
+                  "type": "string",
+                  "description": "The name of the attribute."
+                },
+                "NameFormat": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "The format of the attribute name.",
+                  "examples": [
+                    "urn:oasis:names:tc:SAML:2.0:attrname-format:uri",
+                    "urn:oasis:names:tc:SAML:2.0:attrname-format:basic"
+                  ]
+                },
+                "AttributeValue": {
+                  "type": "array",
+                  "description": "The values of the attribute.",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: SAML 2.0 SSO HTTP Bindings
+  description: >-
+    OpenAPI specification for SAML 2.0 Single Sign-On HTTP bindings as defined
+    in the OASIS SAML 2.0 Bindings specification (saml-bindings-2.0-os). Covers
+    the HTTP Redirect Binding and HTTP POST Binding used for AuthnRequest and
+    Response message exchange between Service Providers and Identity Providers.
+  version: 1.0.0
+  contact:
+    name: Kin Lane
+    email: info@apievangelist.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: https://idp.example.com
+    description: SAML 2.0 Identity Provider
+  - url: https://sp.example.com
+    description: SAML 2.0 Service Provider
+tags:
+  - name: SSO
+    description: SAML 2.0 Single Sign-On operations.
+  - name: SLO
+    description: SAML 2.0 Single Logout operations.
+  - name: Metadata
+    description: SAML 2.0 metadata retrieval.
+paths:
+  /saml/sso/redirect:
+    get:
+      operationId: ssoRedirectBinding
+      summary: SSO HTTP Redirect Binding
+      description: >-
+        Initiates SAML 2.0 Single Sign-On using the HTTP Redirect Binding
+        (Section 3.4 of saml-bindings-2.0-os). The AuthnRequest is encoded,
+        deflated, and base64-encoded as a query parameter. The Identity Provider
+        processes the request and responds with an authentication challenge or
+        redirects back to the Service Provider with a SAML Response.
+      tags:
+        - SSO
+      parameters:
+        - name: SAMLRequest
+          in: query
+          required: true
+          description: >-
+            The deflated, base64-encoded, and URL-encoded SAML AuthnRequest XML
+            message. The message MUST be deflated using the DEFLATE compression
+            method (RFC 1951) before base64 encoding.
+          schema:
+            type: string
+        - name: RelayState
+          in: query
+          required: false
+          description: >-
+            An opaque reference to state information maintained at the Service
+            Provider. The value MUST NOT exceed 80 bytes in length and MUST be
+            integrity-protected by the entity creating it.
+          schema:
+            type: string
+            maxLength: 80
+        - name: SigAlg
+          in: query
+          required: false
+          description: >-
+            The URI identifying the signature algorithm used to sign the
+            request. Required when the request is signed.
+          schema:
+            type: string
+            format: uri
+            enum:
+              - http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+              - http://www.w3.org/2000/09/xmldsig#rsa-sha1
+              - http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256
+        - name: Signature
+          in: query
+          required: false
+          description: >-
+            The base64-encoded and URL-encoded signature value computed over the
+            SAMLRequest, RelayState (if present), and SigAlg query string
+            parameters.
+          schema:
+            type: string
+      responses:
+        "302":
+          description: >-
+            Redirect to the Identity Provider login page or back to the Service
+            Provider with a SAML Response via the HTTP Redirect Binding.
+          headers:
+            Location:
+              description: Redirect URI with SAML response parameters.
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Malformed SAML request or invalid encoding.
+          content:
+            application/xml:
+              schema:
+                type: string
+                description: SAML error status response.
+        "403":
+          description: Request signature validation failed.
+  /saml/sso/post:
+    post:
+      operationId: ssoPostBinding
+      summary: SSO HTTP POST Binding
+      description: >-
+        Processes a SAML 2.0 AuthnRequest or Response using the HTTP POST
+        Binding (Section 3.5 of saml-bindings-2.0-os). The SAML message is
+        base64-encoded and submitted as a form parameter. This binding is
+        typically used for the SAML Response from the Identity Provider to the
+        Service Provider Assertion Consumer Service (ACS) URL.
+      tags:
+        - SSO
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/SAMLPostRequest"
+            examples:
+              AuthnRequest:
+                summary: SP-initiated AuthnRequest via POST
+                value:
+                  SAMLRequest: PHNhbWxwOkF1dGhuUmVxdWVzdC4uLg==
+                  RelayState: https://sp.example.com/resource
+              Response:
+                summary: IdP Response via POST to ACS
+                value:
+                  SAMLResponse: PHNhbWxwOlJlc3BvbnNlLi4uPg==
+                  RelayState: https://sp.example.com/resource
+      responses:
+        "200":
+          description: >-
+            SAML Response processed successfully. Returns an HTML page with
+            auto-submitting form for browser-based POST binding or confirms
+            successful assertion processing.
+          content:
+            text/html:
+              schema:
+                type: string
+                description: >-
+                  HTML document with auto-submitting form containing the SAML
+                  Response for the POST binding relay.
+        "400":
+          description: Invalid or malformed SAML message.
+          content:
+            application/xml:
+              schema:
+                type: string
+                description: SAML error status response.
+        "403":
+          description: SAML assertion validation failed or signature invalid.
+  /saml/acs:
+    post:
+      operationId: assertionConsumerService
+      summary: Assertion Consumer Service (ACS)
+      description: >-
+        The Assertion Consumer Service endpoint at the Service Provider receives
+        and processes SAML Responses from the Identity Provider via the HTTP POST
+        Binding. Validates the SAML Response, extracts the authentication
+        assertion, and establishes a local security context for the user.
+      tags:
+        - SSO
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - SAMLResponse
+              properties:
+                SAMLResponse:
+                  type: string
+                  description: >-
+                    The base64-encoded SAML Response XML containing one or more
+                    authentication assertions from the Identity Provider.
+                RelayState:
+                  type: string
+                  description: >-
+                    The RelayState value originally sent with the AuthnRequest,
+                    returned unchanged by the Identity Provider.
+                  maxLength: 80
+      responses:
+        "302":
+          description: >-
+            Successful assertion processing. Redirects the user to the
+            originally requested resource indicated by RelayState.
+          headers:
+            Location:
+              description: The target resource URI from the RelayState.
+              schema:
+                type: string
+                format: uri
+            Set-Cookie:
+              description: Session cookie establishing the local security context.
+              schema:
+                type: string
+        "400":
+          description: Invalid SAML Response format.
+        "403":
+          description: >-
+            Assertion validation failed due to invalid signature, expired
+            conditions, audience restriction mismatch, or replay detection.
+  /saml/slo/redirect:
+    get:
+      operationId: sloRedirectBinding
+      summary: SLO HTTP Redirect Binding
+      description: >-
+        Initiates or processes a SAML 2.0 Single Logout request or response
+        using the HTTP Redirect Binding. Terminates sessions at the Identity
+        Provider and participating Service Providers.
+      tags:
+        - SLO
+      parameters:
+        - name: SAMLRequest
+          in: query
+          required: false
+          description: >-
+            The deflated, base64-encoded LogoutRequest message. Either
+            SAMLRequest or SAMLResponse MUST be present.
+          schema:
+            type: string
+        - name: SAMLResponse
+          in: query
+          required: false
+          description: >-
+            The deflated, base64-encoded LogoutResponse message. Either
+            SAMLRequest or SAMLResponse MUST be present.
+          schema:
+            type: string
+        - name: RelayState
+          in: query
+          required: false
+          description: Opaque state information maintained between request and response.
+          schema:
+            type: string
+            maxLength: 80
+        - name: SigAlg
+          in: query
+          required: false
+          description: URI identifying the signature algorithm.
+          schema:
+            type: string
+            format: uri
+        - name: Signature
+          in: query
+          required: false
+          description: Base64-encoded signature over the query string parameters.
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirect to next participant in the logout chain.
+          headers:
+            Location:
+              description: URI of the next logout endpoint or final destination.
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid logout request.
+  /saml/metadata:
+    get:
+      operationId: getMetadata
+      summary: SAML 2.0 Metadata Endpoint
+      description: >-
+        Returns the SAML 2.0 metadata document for the entity (Identity Provider
+        or Service Provider) as defined in the OASIS SAML 2.0 Metadata
+        specification (saml-metadata-2.0-os). The metadata document describes
+        the entity's supported bindings, endpoints, certificates, and
+        capabilities.
+      tags:
+        - Metadata
+      responses:
+        "200":
+          description: SAML metadata document.
+          content:
+            application/samlmetadata+xml:
+              schema:
+                type: string
+                description: >-
+                  XML document conforming to the SAML 2.0 Metadata schema
+                  containing the EntityDescriptor element.
+            application/xml:
+              schema:
+                type: string
+                description: SAML 2.0 metadata XML document.
+          headers:
+            Cache-Control:
+              description: Caching directives for the metadata document.
+              schema:
+                type: string
+                example: public, max-age=86400
+        "404":
+          description: Metadata not available for this entity.
+components:
+  schemas:
+    SAMLPostRequest:
+      type: object
+      properties:
+        SAMLRequest:
+          type: string
+          description: >-
+            The base64-encoded SAML AuthnRequest XML message. Either SAMLRequest
+            or SAMLResponse MUST be present.
+        SAMLResponse:
+          type: string
+          description: >-
+            The base64-encoded SAML Response XML message containing
+            authentication assertions. Either SAMLRequest or SAMLResponse MUST
+            be present.
+        RelayState:
+          type: string
+          description: >-
+            Opaque reference to state information at the message sender. MUST
+            NOT exceed 80 bytes.
+          maxLength: 80

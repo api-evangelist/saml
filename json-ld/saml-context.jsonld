@@ -1,0 +1,157 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "saml": "urn:oasis:names:tc:SAML:2.0:",
+    "samlp": "urn:oasis:names:tc:SAML:2.0:protocol#",
+    "samlmd": "urn:oasis:names:tc:SAML:2.0:metadata#",
+    "schema": "https://schema.org/",
+    "sec": "https://w3id.org/security#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "IdentityProvider": {
+      "@id": "samlmd:IDPSSODescriptor",
+      "@type": "@id"
+    },
+    "ServiceProvider": {
+      "@id": "samlmd:SPSSODescriptor",
+      "@type": "@id"
+    },
+    "EntityDescriptor": {
+      "@id": "samlmd:EntityDescriptor",
+      "@type": "@id"
+    },
+    "Assertion": {
+      "@id": "saml:assertion#Assertion",
+      "@type": "@id"
+    },
+    "AuthnRequest": {
+      "@id": "samlp:AuthnRequest",
+      "@type": "@id"
+    },
+    "AuthnStatement": {
+      "@id": "saml:assertion#AuthnStatement",
+      "@type": "@id"
+    },
+    "AttributeStatement": {
+      "@id": "saml:assertion#AttributeStatement",
+      "@type": "@id"
+    },
+    "Subject": {
+      "@id": "saml:assertion#Subject",
+      "@type": "@id"
+    },
+    "NameID": {
+      "@id": "saml:assertion#NameID",
+      "@type": "@id"
+    },
+    "Conditions": {
+      "@id": "saml:assertion#Conditions",
+      "@type": "@id"
+    },
+    "entityID": {
+      "@id": "samlmd:entityID",
+      "@type": "@id"
+    },
+    "issuer": {
+      "@id": "saml:assertion#Issuer",
+      "@type": "xsd:string"
+    },
+    "issueInstant": {
+      "@id": "saml:assertion#IssueInstant",
+      "@type": "xsd:dateTime"
+    },
+    "destination": {
+      "@id": "samlp:Destination",
+      "@type": "@id"
+    },
+    "assertionConsumerServiceURL": {
+      "@id": "samlp:AssertionConsumerServiceURL",
+      "@type": "@id"
+    },
+    "singleSignOnService": {
+      "@id": "samlmd:SingleSignOnService",
+      "@type": "@id"
+    },
+    "singleLogoutService": {
+      "@id": "samlmd:SingleLogoutService",
+      "@type": "@id"
+    },
+    "assertionConsumerService": {
+      "@id": "samlmd:AssertionConsumerService",
+      "@type": "@id"
+    },
+    "binding": {
+      "@id": "samlmd:Binding",
+      "@type": "@id"
+    },
+    "location": {
+      "@id": "samlmd:Location",
+      "@type": "@id"
+    },
+    "nameIDFormat": {
+      "@id": "samlmd:NameIDFormat",
+      "@type": "@id"
+    },
+    "protocolSupportEnumeration": {
+      "@id": "samlmd:protocolSupportEnumeration",
+      "@type": "@id"
+    },
+    "authnContextClassRef": {
+      "@id": "saml:assertion#AuthnContextClassRef",
+      "@type": "@id"
+    },
+    "sessionIndex": {
+      "@id": "samlp:SessionIndex",
+      "@type": "xsd:string"
+    },
+    "relayState": {
+      "@id": "samlp:RelayState",
+      "@type": "xsd:string"
+    },
+    "forceAuthn": {
+      "@id": "samlp:ForceAuthn",
+      "@type": "xsd:boolean"
+    },
+    "isPassive": {
+      "@id": "samlp:IsPassive",
+      "@type": "xsd:boolean"
+    },
+    "wantAuthnRequestsSigned": {
+      "@id": "samlmd:WantAuthnRequestsSigned",
+      "@type": "xsd:boolean"
+    },
+    "authnRequestsSigned": {
+      "@id": "samlmd:AuthnRequestsSigned",
+      "@type": "xsd:boolean"
+    },
+    "wantAssertionsSigned": {
+      "@id": "samlmd:WantAssertionsSigned",
+      "@type": "xsd:boolean"
+    },
+    "notBefore": {
+      "@id": "saml:assertion#NotBefore",
+      "@type": "xsd:dateTime"
+    },
+    "notOnOrAfter": {
+      "@id": "saml:assertion#NotOnOrAfter",
+      "@type": "xsd:dateTime"
+    },
+    "audience": {
+      "@id": "saml:assertion#Audience",
+      "@type": "@id"
+    },
+    "signingCertificate": {
+      "@id": "sec:publicKey",
+      "@type": "xsd:string"
+    },
+    "name": "schema:name",
+    "description": "schema:description",
+    "url": "schema:url",
+    "identifier": "dcterms:identifier",
+    "issued": {
+      "@id": "dcterms:issued",
+      "@type": "xsd:date"
+    }
+  }
+}

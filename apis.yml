@@ -11,5 +11,26 @@ tags:
 - Identity Management
 created: '2025'
 modified: '2025'
-apis: []
-common: []
+apis:
+- name: SAML 2.0 SSO HTTP Bindings API
+  description: >-
+    API specification for SAML 2.0 Single Sign-On HTTP bindings including the
+    HTTP Redirect Binding and HTTP POST Binding for AuthnRequest and Response
+    exchange, Assertion Consumer Service, Single Logout, and metadata retrieval
+    as defined in the OASIS SAML 2.0 Bindings specification.
+  properties:
+  - type: x-openapi
+    url: openapi/saml-sso-bindings.yml
+common:
+- type: x-json-schema
+  url: json-schema/saml-entity-descriptor.json
+  title: SAML 2.0 EntityDescriptor Metadata
+- type: x-json-schema
+  url: json-schema/saml-authn-request.json
+  title: SAML 2.0 AuthnRequest
+- type: x-json-schema
+  url: json-schema/saml-assertion.json
+  title: SAML 2.0 Assertion
+- type: x-json-ld-context
+  url: json-ld/saml-context.jsonld
+  title: SAML 2.0 JSON-LD Context

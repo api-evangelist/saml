@@ -1,0 +1,136 @@
+{
+  "$id": "saml-authn-request.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SAML 2.0 AuthnRequest",
+  "description": "Schema describing the JSON representation of a SAML 2.0 AuthnRequest message as defined in OASIS SAML 2.0 Core Section 3.4.1. An AuthnRequest is sent by a Service Provider to an Identity Provider to request authentication of a principal.",
+  "type": "object",
+  "required": [
+    "ID",
+    "Version",
+    "IssueInstant",
+    "Issuer"
+  ],
+  "properties": {
+    "ID": {
+      "type": "string",
+      "description": "A unique identifier for the request. The value MUST be generated using a mechanism that ensures uniqueness."
+    },
+    "Version": {
+      "type": "string",
+      "description": "The SAML version of the request. MUST be '2.0'.",
+      "const": "2.0"
+    },
+    "IssueInstant": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The time instant of issuance of the request in UTC."
+    },
+    "Destination": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URI reference indicating the address to which the request has been sent."
+    },
+    "Issuer": {
+      "type": "string",
+      "description": "The entity that generated the request message. Typically the entityID of the Service Provider."
+    },
+    "AssertionConsumerServiceURL": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URL to which the Identity Provider MUST return the SAML Response."
+    },
+    "AssertionConsumerServiceIndex": {
+      "type": "integer",
+      "description": "An index referencing a particular AssertionConsumerService endpoint in the SP metadata.",
+      "minimum": 0
+    },
+    "ProtocolBinding": {
+      "type": "string",
+      "format": "uri",
+      "description": "The SAML binding URI that the IdP should use to return the Response message.",
+      "examples": [
+        "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+        "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+      ]
+    },
+    "ForceAuthn": {
+      "type": "boolean",
+      "description": "If true, the Identity Provider MUST authenticate the presenter directly rather than rely on a previous security context.",
+      "default": false
+    },
+    "IsPassive": {
+      "type": "boolean",
+      "description": "If true, the Identity Provider MUST NOT visibly take control of the user interface from the requester.",
+      "default": false
+    },
+    "NameIDPolicy": {
+      "type": "object",
+      "description": "Specifies constraints on the name identifier to be used to represent the requested subject.",
+      "properties": {
+        "Format": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URI reference for the requested NameID format.",
+          "examples": [
+            "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+            "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+            "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+            "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+          ]
+        },
+        "AllowCreate": {
+          "type": "boolean",
+          "description": "Whether the Identity Provider is allowed to create a new identifier to represent the principal.",
+          "default": false
+        },
+        "SPNameQualifier": {
+          "type": "string",
+          "description": "Further qualifies a name identifier with the name of a Service Provider or affiliation of providers."
+        }
+      },
+      "additionalProperties": true
+    },
+    "RequestedAuthnContext": {
+      "type": "object",
+      "description": "Specifies the authentication context requirements for the authentication statement.",
+      "properties": {
+        "Comparison": {
+          "type": "string",
+          "description": "How the requested context should be compared to the context used by the Identity Provider.",
+          "enum": [
+            "exact",
+            "minimum",
+            "maximum",
+            "better"
+          ],
+          "default": "exact"
+        },
+        "AuthnContextClassRef": {
+          "type": "array",
+          "description": "The authentication context class references that are acceptable.",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "examples": [
+            [
+              "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
+              "urn:oasis:names:tc:SAML:2.0:ac:classes:X509"
+            ]
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "Consent": {
+      "type": "string",
+      "format": "uri",
+      "description": "Indicates whether consent has been obtained from the principal for the request.",
+      "examples": [
+        "urn:oasis:names:tc:SAML:2.0:consent:unspecified",
+        "urn:oasis:names:tc:SAML:2.0:consent:obtained"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
