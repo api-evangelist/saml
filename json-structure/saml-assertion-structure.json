@@ -1,0 +1,115 @@
+{
+  "title": "SAML 2.0 Assertion Structure",
+  "description": "JSON structure documentation for a SAML 2.0 Assertion showing the XML element hierarchy mapped to JSON field names.",
+  "type": "object",
+  "fields": [
+    {"name": "Version", "type": "string", "required": true, "description": "Must be '2.0'"},
+    {"name": "ID", "type": "string", "required": true, "description": "Unique assertion identifier"},
+    {"name": "IssueInstant", "type": "string", "required": true, "description": "UTC datetime of assertion creation (ISO 8601)"},
+    {"name": "Issuer", "type": "string", "required": true, "description": "Entity ID of the Identity Provider"},
+    {
+      "name": "Subject",
+      "type": "object",
+      "required": false,
+      "description": "The principal being authenticated",
+      "fields": [
+        {
+          "name": "NameID",
+          "type": "object",
+          "description": "Name identifier for the subject",
+          "fields": [
+            {"name": "Format", "type": "string", "description": "URI specifying name ID format (e.g., urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress)"},
+            {"name": "SPNameQualifier", "type": "string", "description": "SP-specific name qualifier"},
+            {"name": "value", "type": "string", "description": "The actual identifier value (email, username, etc.)"}
+          ]
+        },
+        {
+          "name": "SubjectConfirmation",
+          "type": "array",
+          "description": "How the subject can be confirmed",
+          "items": {
+            "type": "object",
+            "fields": [
+              {"name": "Method", "type": "string", "description": "Confirmation method URI (e.g., urn:oasis:names:tc:SAML:2.0:cm:bearer)"},
+              {
+                "name": "SubjectConfirmationData",
+                "type": "object",
+                "fields": [
+                  {"name": "InResponseTo", "type": "string", "description": "AuthnRequest ID this responds to"},
+                  {"name": "Recipient", "type": "string", "description": "ACS URL this assertion is addressed to"},
+                  {"name": "NotOnOrAfter", "type": "string", "description": "Assertion expiry time"}
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conditions",
+      "type": "object",
+      "required": false,
+      "description": "Validity conditions for the assertion",
+      "fields": [
+        {"name": "NotBefore", "type": "string", "description": "Assertion not valid before this time"},
+        {"name": "NotOnOrAfter", "type": "string", "description": "Assertion not valid on or after this time"},
+        {
+          "name": "AudienceRestriction",
+          "type": "array",
+          "description": "Intended audiences (SP entity IDs)",
+          "items": {
+            "type": "object",
+            "fields": [
+              {"name": "Audience", "type": "array", "description": "Array of audience URI strings"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AuthnStatement",
+      "type": "array",
+      "required": false,
+      "description": "Authentication event statements",
+      "items": {
+        "type": "object",
+        "fields": [
+          {"name": "AuthnInstant", "type": "string", "description": "Time the authentication occurred"},
+          {"name": "SessionIndex", "type": "string", "description": "IdP session index"},
+          {"name": "SessionNotOnOrAfter", "type": "string", "description": "Session expiry time"},
+          {
+            "name": "AuthnContext",
+            "type": "object",
+            "fields": [
+              {"name": "AuthnContextClassRef", "type": "string", "description": "Authentication method URI (e.g., PasswordProtectedTransport)"}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "AttributeStatement",
+      "type": "array",
+      "required": false,
+      "description": "User attribute statements",
+      "items": {
+        "type": "object",
+        "fields": [
+          {
+            "name": "Attribute",
+            "type": "array",
+            "description": "User attributes",
+            "items": {
+              "type": "object",
+              "fields": [
+                {"name": "Name", "type": "string", "description": "Attribute name"},
+                {"name": "NameFormat", "type": "string", "description": "Attribute name format URI"},
+                {"name": "AttributeValue", "type": "array", "description": "Array of attribute values"}
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

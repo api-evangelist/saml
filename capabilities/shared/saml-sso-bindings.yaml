@@ -1,0 +1,218 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "SAML 2.0 SSO HTTP Bindings"
+  description: >-
+    SAML 2.0 Single Sign-On HTTP Bindings implementing the HTTP Redirect Binding
+    and HTTP POST Binding for AuthnRequest and Response exchange, Assertion Consumer
+    Service (ACS), Single Logout (SLO), and SAML metadata retrieval as defined in
+    the OASIS SAML 2.0 Bindings specification (saml-bindings-2.0-os).
+  tags:
+    - Authentication
+    - Federation
+    - Identity Provider
+    - OASIS
+    - SAML
+    - Service Provider
+    - Single Sign-On
+    - SSO
+    - Standard
+  created: "2026-05-02"
+  modified: "2026-05-02"
+
+binds:
+  - namespace: env
+    keys:
+      SAML_IDP_BASE_URL: SAML_IDP_BASE_URL
+
+capability:
+  consumes:
+    - type: http
+      namespace: saml-sso
+      baseUri: "{{SAML_IDP_BASE_URL}}"
+      description: "SAML 2.0 Identity Provider HTTP Bindings endpoints"
+      resources:
+        - name: sso-redirect
+          path: /saml/sso/redirect
+          description: "SAML 2.0 SSO HTTP Redirect Binding for AuthnRequest initiation"
+          operations:
+            - name: sso-redirect-binding
+              method: GET
+              description: "SSO HTTP Redirect Binding - Initiate SAML 2.0 SSO via HTTP Redirect"
+              inputParameters:
+                - name: SAMLRequest
+                  in: query
+                  type: string
+                  required: true
+                  description: "Deflated, base64-encoded, URL-encoded SAML AuthnRequest XML"
+                - name: RelayState
+                  in: query
+                  type: string
+                  required: false
+                  description: "Opaque SP state reference (max 80 bytes)"
+                - name: SigAlg
+                  in: query
+                  type: string
+                  required: false
+                  description: "Algorithm URI for signature (e.g., http://www.w3.org/2001/04/xmldsig-more#rsa-sha256)"
+                - name: Signature
+                  in: query
+                  type: string
+                  required: false
+                  description: "Base64-encoded URL-encoded digital signature over SAMLRequest and RelayState"
+              outputRawFormat: xml
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: sso-post
+          path: /saml/sso/post
+          description: "SAML 2.0 SSO HTTP POST Binding"
+          operations:
+            - name: sso-post-binding
+              method: POST
+              description: "SSO HTTP POST Binding - Submit SAML AuthnRequest or receive IdP Response"
+              outputRawFormat: xml
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+              body:
+                type: form
+                data:
+                  SAMLRequest: "{{tools.SAMLRequest}}"
+                  RelayState: "{{tools.RelayState}}"
+
+        - name: acs
+          path: /saml/acs
+          description: "Assertion Consumer Service (ACS) endpoint for receiving SAML Responses"
+          operations:
+            - name: assertion-consumer-service
+              method: POST
+              description: "Assertion Consumer Service (ACS) - Receive and process SAML Response"
+              outputRawFormat: xml
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+              body:
+                type: form
+                data:
+                  SAMLResponse: "{{tools.SAMLResponse}}"
+                  RelayState: "{{tools.RelayState}}"
+
+        - name: slo
+          path: /saml/slo
+          description: "Single Logout (SLO) HTTP Redirect Binding"
+          operations:
+            - name: slo-redirect-binding
+              method: GET
+              description: "SLO HTTP Redirect Binding - Initiate or receive SAML Single Logout"
+              inputParameters:
+                - name: SAMLRequest
+                  in: query
+                  type: string
+                  required: false
+                  description: "LogoutRequest XML (deflated and base64-encoded)"
+                - name: SAMLResponse
+                  in: query
+                  type: string
+                  required: false
+                  description: "LogoutResponse XML (deflated and base64-encoded)"
+                - name: RelayState
+                  in: query
+                  type: string
+                  required: false
+                  description: "Opaque SP state reference"
+              outputRawFormat: xml
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: metadata
+          path: /saml/metadata
+          description: "SAML 2.0 EntityDescriptor metadata endpoint"
+          operations:
+            - name: get-metadata
+              method: GET
+              description: "SAML 2.0 Metadata Endpoint - Retrieve EntityDescriptor XML"
+              outputRawFormat: xml
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      port: 8100
+      namespace: saml-sso-rest
+      resources:
+        - path: /v1/sso/redirect
+          name: sso-redirect
+          description: "SAML SSO HTTP Redirect Binding"
+          operations:
+            - method: GET
+              name: sso-redirect-binding
+              description: "Initiate SSO via HTTP Redirect Binding"
+              call: "saml-sso.sso-redirect-binding"
+              with:
+                SAMLRequest: "rest.SAMLRequest"
+                RelayState: "rest.RelayState"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/sso/post
+          name: sso-post
+          description: "SAML SSO HTTP POST Binding"
+          operations:
+            - method: POST
+              name: sso-post-binding
+              description: "Submit SAML AuthnRequest via POST"
+              call: "saml-sso.sso-post-binding"
+              with:
+                SAMLRequest: "rest.SAMLRequest"
+                RelayState: "rest.RelayState"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/metadata
+          name: metadata
+          description: "SAML Metadata endpoint"
+          operations:
+            - method: GET
+              name: get-metadata
+              description: "Retrieve SAML EntityDescriptor metadata"
+              call: "saml-sso.get-metadata"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9100
+      namespace: saml-sso-mcp
+      transport: http
+      tools:
+        - name: initiate-sso-redirect
+          description: "Initiate SAML 2.0 SSO using HTTP Redirect Binding"
+          hints:
+            readOnly: false
+            destructive: false
+            idempotent: false
+          call: "saml-sso.sso-redirect-binding"
+          with:
+            SAMLRequest: "tools.SAMLRequest"
+            RelayState: "tools.RelayState"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-saml-metadata
+          description: "Retrieve SAML 2.0 EntityDescriptor metadata from the Identity Provider"
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "saml-sso.get-metadata"
+          outputParameters:
+            - type: object
+              mapping: "$."

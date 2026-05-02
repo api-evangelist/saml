@@ -1,0 +1,235 @@
+name: SAML Vocabulary
+description: >-
+  Normative vocabulary and terminology for the Security Assertion Markup Language
+  (SAML) 2.0 specification as defined by OASIS. Documents key concepts, roles,
+  protocol messages, bindings, and profiles required for implementing SAML-based
+  federation and Single Sign-On.
+version: '2.0'
+created: '2026-05-02'
+modified: '2026-05-02'
+url: https://www.oasis-open.org/standard/saml/
+specification: SAML 2.0 (OASIS Standard, March 2005)
+
+terms:
+  - term: Assertion
+    definition: >-
+      A package of information (an XML document) that supplies one or more statements
+      made by a SAML authority. SAML defines three types: Authentication, Attribute,
+      and Authorization Decision assertions.
+    tags:
+      - Core
+      - XML
+
+  - term: AuthnRequest
+    definition: >-
+      A SAML protocol message sent by a Service Provider to an Identity Provider
+      requesting the IdP authenticate a user and return an Assertion. The primary
+      message used in SP-initiated SSO.
+    tags:
+      - Protocol
+      - SSO
+
+  - term: Identity Provider (IdP)
+    definition: >-
+      A SAML authority that creates, maintains, and manages identity information
+      for principals. The IdP authenticates users and issues Assertions to Service
+      Providers. Defined as an IDPSSODescriptor in metadata.
+    synonyms:
+      - IdP
+      - Asserting Party
+    tags:
+      - Federation
+      - Role
+
+  - term: Service Provider (SP)
+    definition: >-
+      An entity that relies on an Identity Provider for authentication and attribute
+      information about a user. The SP receives and validates SAML Assertions.
+      Defined as an SPSSODescriptor in metadata.
+    synonyms:
+      - SP
+      - Relying Party
+    tags:
+      - Federation
+      - Role
+
+  - term: Single Sign-On (SSO)
+    definition: >-
+      The ability to access multiple applications or services using a single
+      authentication event. SAML 2.0 enables web-based, cross-domain SSO between
+      Identity Providers and Service Providers.
+    synonyms:
+      - SSO
+    tags:
+      - Authentication
+      - Federation
+
+  - term: Single Logout (SLO)
+    definition: >-
+      A SAML profile that propagates a logout request from one party to all other
+      parties participating in a SSO session, ensuring the session is terminated
+      at the IdP and all SPs.
+    synonyms:
+      - SLO
+    tags:
+      - Authentication
+      - Federation
+
+  - term: HTTP Redirect Binding
+    definition: >-
+      A SAML binding mechanism that encodes SAML messages within URL query parameters
+      using deflate compression and base64 encoding. Used for AuthnRequest and
+      LogoutRequest messages. Defined in saml-bindings-2.0-os Section 3.4.
+    tags:
+      - Binding
+      - HTTP
+      - Transport
+
+  - term: HTTP POST Binding
+    definition: >-
+      A SAML binding mechanism that encodes SAML messages as HTML form POST parameters
+      using base64 encoding (without compression). Used for SAMLResponse delivery to
+      the Assertion Consumer Service. Defined in saml-bindings-2.0-os Section 3.5.
+    tags:
+      - Binding
+      - HTTP
+      - Transport
+
+  - term: Assertion Consumer Service (ACS)
+    definition: >-
+      An endpoint at the Service Provider that receives SAML Assertions (Responses)
+      from the Identity Provider via HTTP POST Binding. The ACS URL is included
+      in the AuthnRequest and registered in the SP's metadata.
+    synonyms:
+      - ACS
+    tags:
+      - Endpoint
+      - SP
+
+  - term: EntityDescriptor
+    definition: >-
+      The root element of SAML metadata. Describes a SAML entity (IdP or SP) with
+      its entity ID, certificates, endpoint URLs, name ID formats, and attribute
+      requirements. Exchanged between parties for federation configuration.
+    tags:
+      - Metadata
+      - XML
+
+  - term: NameID
+    definition: >-
+      An identifier representing a principal (user) in SAML assertions and logout
+      messages. Has multiple formats: emailAddress, persistent, transient, unspecified.
+      The format is negotiated between IdP and SP via NameIDPolicy.
+    tags:
+      - Core
+      - Identity
+
+  - term: RelayState
+    definition: >-
+      An opaque reference to state information maintained at the Service Provider.
+      Passed through the SAML exchange so the SP can redirect the user to the
+      correct resource after authentication. MUST NOT exceed 80 bytes.
+    tags:
+      - Protocol
+      - SSO
+
+  - term: Digital Signature
+    definition: >-
+      XML digital signatures (XMLDSig) applied to SAML Assertions and messages
+      to ensure integrity and non-repudiation. SAML 2.0 supports request signing
+      for both HTTP Redirect and POST bindings.
+    tags:
+      - Cryptography
+      - Security
+
+  - term: Conditions
+    definition: >-
+      XML elements in a SAML Assertion specifying constraints on its validity,
+      including NotBefore and NotOnOrAfter time windows and AudienceRestriction
+      limiting which SPs may use the assertion.
+    tags:
+      - Core
+      - Security
+
+  - term: Subject Confirmation
+    definition: >-
+      Information in a SAML Assertion that allows a recipient to verify the assertion
+      is meant for them (bearer method: the assertion is presented as proof).
+      Contains the Recipient ACS URL and expiry time.
+    tags:
+      - Core
+      - Security
+
+  - term: Authentication Context Class
+    definition: >-
+      A URI reference in the AuthnStatement identifying the method of authentication
+      used by the IdP. Common values include PasswordProtectedTransport,
+      TLSClient, and Kerberos.
+    tags:
+      - Authentication
+      - Core
+
+  - term: SP-Initiated SSO
+    definition: >-
+      A SAML Web Browser SSO profile flow where the user accesses the Service Provider
+      first, which then sends an AuthnRequest to the Identity Provider to authenticate
+      the user. Most common enterprise SSO pattern.
+    tags:
+      - Profile
+      - SSO
+
+  - term: IdP-Initiated SSO
+    definition: >-
+      A SAML SSO flow where the Identity Provider directly sends an unsolicited
+      Assertion to the Service Provider without a prior AuthnRequest. Used when
+      the user starts at an IdP portal.
+    tags:
+      - Profile
+      - SSO
+
+normative_keywords:
+  - keyword: MUST
+    definition: "This word means that the definition is an absolute requirement of the specification."
+  - keyword: MUST NOT
+    definition: "This phrase means that the definition is an absolute prohibition of the specification."
+  - keyword: SHOULD
+    definition: "This word means that there may exist valid reasons in particular circumstances to ignore a particular item, but the full implications must be understood and carefully weighed."
+  - keyword: MAY
+    definition: "This word means that an item is truly optional."
+
+categories:
+  - name: Roles
+    terms:
+      - Identity Provider (IdP)
+      - Service Provider (SP)
+
+  - name: Protocol Messages
+    terms:
+      - AuthnRequest
+      - Assertion
+
+  - name: Bindings
+    terms:
+      - HTTP Redirect Binding
+      - HTTP POST Binding
+
+  - name: SSO Profiles
+    terms:
+      - Single Sign-On (SSO)
+      - SP-Initiated SSO
+      - IdP-Initiated SSO
+      - Single Logout (SLO)
+
+  - name: Assertions and Security
+    terms:
+      - NameID
+      - Conditions
+      - Subject Confirmation
+      - Authentication Context Class
+      - Digital Signature
+      - RelayState
+
+  - name: Metadata
+    terms:
+      - EntityDescriptor
+      - Assertion Consumer Service (ACS)

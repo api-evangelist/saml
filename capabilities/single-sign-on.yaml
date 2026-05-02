@@ -1,0 +1,178 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "SAML 2.0 Single Sign-On"
+  description: >-
+    SAML 2.0 Single Sign-On workflow capability implementing the complete SSO
+    lifecycle: SP-initiated SSO via HTTP Redirect Binding and HTTP POST Binding,
+    Assertion Consumer Service (ACS) processing, Single Logout (SLO), and
+    metadata exchange. Designed for identity and access management engineers
+    integrating SAML-based federation between Identity Providers and Service Providers.
+  tags:
+    - Authentication
+    - Federation
+    - Identity Management
+    - OASIS
+    - SAML
+    - Security
+    - Single Sign-On
+    - SSO
+  created: "2026-05-02"
+  modified: "2026-05-02"
+
+binds:
+  - namespace: env
+    keys:
+      SAML_IDP_BASE_URL: SAML_IDP_BASE_URL
+
+capability:
+  consumes:
+    - import: saml-sso
+      location: ./shared/saml-sso-bindings.yaml
+
+  exposes:
+    - type: rest
+      port: 8080
+      namespace: single-sign-on-api
+      description: "Unified REST API for SAML 2.0 Single Sign-On workflow implementation."
+      resources:
+        - path: /v1/sso/redirect
+          name: sso-redirect
+          description: "Initiate SP-to-IdP SSO using HTTP Redirect Binding"
+          operations:
+            - method: GET
+              name: initiate-sso-redirect
+              description: "Initiate SAML SSO via HTTP Redirect Binding"
+              call: "saml-sso.sso-redirect-binding"
+              with:
+                SAMLRequest: "rest.SAMLRequest"
+                RelayState: "rest.RelayState"
+                SigAlg: "rest.SigAlg"
+                Signature: "rest.Signature"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/sso/post
+          name: sso-post
+          description: "Initiate SP-to-IdP SSO using HTTP POST Binding"
+          operations:
+            - method: POST
+              name: initiate-sso-post
+              description: "Submit SAML AuthnRequest via HTTP POST Binding"
+              call: "saml-sso.sso-post-binding"
+              with:
+                SAMLRequest: "rest.SAMLRequest"
+                RelayState: "rest.RelayState"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/acs
+          name: acs
+          description: "Assertion Consumer Service - process incoming SAML Responses from IdP"
+          operations:
+            - method: POST
+              name: process-saml-response
+              description: "Process SAML Response at Assertion Consumer Service"
+              call: "saml-sso.assertion-consumer-service"
+              with:
+                SAMLResponse: "rest.SAMLResponse"
+                RelayState: "rest.RelayState"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/slo
+          name: slo
+          description: "Single Logout - initiate or receive SAML logout"
+          operations:
+            - method: GET
+              name: initiate-slo
+              description: "Initiate or process SAML Single Logout"
+              call: "saml-sso.slo-redirect-binding"
+              with:
+                SAMLRequest: "rest.SAMLRequest"
+                SAMLResponse: "rest.SAMLResponse"
+                RelayState: "rest.RelayState"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/metadata
+          name: metadata
+          description: "SAML EntityDescriptor metadata for federation configuration"
+          operations:
+            - method: GET
+              name: get-idp-metadata
+              description: "Retrieve SAML EntityDescriptor metadata from Identity Provider"
+              call: "saml-sso.get-metadata"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9080
+      namespace: single-sign-on-mcp
+      transport: http
+      description: "MCP server for AI-assisted SAML SSO configuration and troubleshooting."
+      tools:
+        - name: initiate-sso-redirect
+          description: "Initiate SAML 2.0 SSO using the HTTP Redirect Binding with a deflated AuthnRequest"
+          hints:
+            readOnly: false
+            destructive: false
+            idempotent: false
+          call: "saml-sso.sso-redirect-binding"
+          with:
+            SAMLRequest: "tools.SAMLRequest"
+            RelayState: "tools.RelayState"
+            SigAlg: "tools.SigAlg"
+            Signature: "tools.Signature"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: initiate-sso-post
+          description: "Initiate SAML 2.0 SSO using the HTTP POST Binding with a base64-encoded AuthnRequest"
+          hints:
+            readOnly: false
+            destructive: false
+            idempotent: false
+          call: "saml-sso.sso-post-binding"
+          with:
+            SAMLRequest: "tools.SAMLRequest"
+            RelayState: "tools.RelayState"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: process-acs-response
+          description: "Process an incoming SAML Response at the Assertion Consumer Service endpoint"
+          hints:
+            readOnly: false
+            destructive: false
+            idempotent: true
+          call: "saml-sso.assertion-consumer-service"
+          with:
+            SAMLResponse: "tools.SAMLResponse"
+            RelayState: "tools.RelayState"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: initiate-single-logout
+          description: "Initiate SAML Single Logout via HTTP Redirect Binding"
+          hints:
+            readOnly: false
+            destructive: false
+            idempotent: true
+          call: "saml-sso.slo-redirect-binding"
+          with:
+            SAMLRequest: "tools.SAMLRequest"
+            RelayState: "tools.RelayState"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-idp-metadata
+          description: "Retrieve SAML 2.0 EntityDescriptor metadata from the Identity Provider for federation setup"
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "saml-sso.get-metadata"
+          outputParameters:
+            - type: object
+              mapping: "$."

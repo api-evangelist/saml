@@ -1,0 +1,94 @@
+extends: "spectral:oas"
+rules:
+  # SAML 2.0 SSO HTTP Bindings API Conventions
+
+  saml-summary-title-case:
+    description: Operation summaries must use Title Case per SAML spec naming conventions
+    message: "Summary '{{value}}' should use Title Case"
+    severity: warn
+    given: "$.paths[*][*].summary"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z]"
+
+  saml-security-schemes-defined:
+    description: SAML endpoints require digital signature verification; security schemes should be documented
+    message: "Security requirements should be documented for SAML endpoints"
+    severity: info
+    given: "$.paths[*][*]"
+    then:
+      field: security
+      function: defined
+
+  saml-samlrequest-parameter:
+    description: SAML SSO redirect binding GET endpoints must define a SAMLRequest parameter
+    message: "SAML redirect binding endpoints should define SAMLRequest parameter"
+    severity: warn
+    given: "$.paths['/saml/sso/redirect'].get.parameters[*]"
+    then:
+      field: name
+      function: enumeration
+      functionOptions:
+        values:
+          - SAMLRequest
+          - RelayState
+          - SigAlg
+          - Signature
+
+  saml-relay-state-max-length:
+    description: RelayState parameter must enforce 80 byte maximum per SAML spec Section 3.4.3
+    message: "RelayState maxLength must be 80"
+    severity: error
+    given: "$.paths[*][*].parameters[?(@.name=='RelayState')].schema"
+    then:
+      field: maxLength
+      function: defined
+
+  saml-response-xml-content-type:
+    description: SAML XML responses should specify application/xml or text/xml content type
+    message: "SAML response should specify XML content type"
+    severity: warn
+    given: "$.paths[*][*].responses[*].content"
+    then:
+      function: truthy
+
+  saml-operation-id-required:
+    description: All operations must have an operationId per SAML API standards
+    message: "Operation must have an operationId"
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      field: operationId
+      function: defined
+
+  saml-tags-defined:
+    description: Operations must use defined tags matching SAML specification domains
+    message: "Tag must be one of: SSO, SLO, Metadata"
+    severity: warn
+    given: "$.paths[*][*].tags[*]"
+    then:
+      function: enumeration
+      functionOptions:
+        values:
+          - SSO
+          - SLO
+          - Metadata
+
+  saml-parameter-descriptions:
+    description: All parameters must have descriptions explaining SAML-specific constraints
+    message: "Parameter '{{value}}' must have a description"
+    severity: warn
+    given: "$.paths[*][*].parameters[*]"
+    then:
+      field: description
+      function: defined
+
+  saml-response-400-defined:
+    description: SAML endpoints should define 400 Bad Request for malformed SAML messages
+    message: "400 Bad Request response should be defined for SAML protocol errors"
+    severity: info
+    given: "$.paths[*][*].responses"
+    then:
+      field: "400"
+      function: defined
