@@ -1,0 +1,67 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: SAML 2.0 SSO HTTP Bindings — Metadata
+  description: 'SAML 2.0 SSO HTTP Bindings — Metadata. 1 operations. Lead operation: SAML 2.0 Metadata Endpoint. Self-contained
+    Naftiko capability covering one Saml business surface.'
+  tags:
+  - Saml
+  - Metadata
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    SAML_API_KEY: SAML_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: sso-bindings-metadata
+    baseUri: https://idp.example.com
+    description: SAML 2.0 SSO HTTP Bindings — Metadata business capability. Self-contained, no shared references.
+    resources:
+    - name: saml-metadata
+      path: /saml/metadata
+      operations:
+      - name: getmetadata
+        method: GET
+        description: SAML 2.0 Metadata Endpoint
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: sso-bindings-metadata-rest
+    port: 8080
+    description: REST adapter for SAML 2.0 SSO HTTP Bindings — Metadata. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/saml/metadata
+      name: saml-metadata
+      description: REST surface for saml-metadata.
+      operations:
+      - method: GET
+        name: getmetadata
+        description: SAML 2.0 Metadata Endpoint
+        call: sso-bindings-metadata.getmetadata
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: sso-bindings-metadata-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for SAML 2.0 SSO HTTP Bindings — Metadata. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: saml-2-0-metadata-endpoint
+      description: SAML 2.0 Metadata Endpoint
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: sso-bindings-metadata.getmetadata
+      outputParameters:
+      - type: object
+        mapping: $.

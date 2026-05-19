@@ -1,0 +1,100 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: SAML 2.0 SSO HTTP Bindings — SLO
+  description: 'SAML 2.0 SSO HTTP Bindings — SLO. 1 operations. Lead operation: SLO HTTP Redirect Binding. Self-contained
+    Naftiko capability covering one Saml business surface.'
+  tags:
+  - Saml
+  - SLO
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    SAML_API_KEY: SAML_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: sso-bindings-slo
+    baseUri: https://idp.example.com
+    description: SAML 2.0 SSO HTTP Bindings — SLO business capability. Self-contained, no shared references.
+    resources:
+    - name: saml-slo-redirect
+      path: /saml/slo/redirect
+      operations:
+      - name: sloredirectbinding
+        method: GET
+        description: SLO HTTP Redirect Binding
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: SAMLRequest
+          in: query
+          type: string
+          description: The deflated, base64-encoded LogoutRequest message. Either SAMLRequest or SAMLResponse MUST be present.
+        - name: SAMLResponse
+          in: query
+          type: string
+          description: The deflated, base64-encoded LogoutResponse message. Either SAMLRequest or SAMLResponse MUST be present.
+        - name: RelayState
+          in: query
+          type: string
+          description: Opaque state information maintained between request and response.
+        - name: SigAlg
+          in: query
+          type: string
+          description: URI identifying the signature algorithm.
+        - name: Signature
+          in: query
+          type: string
+          description: Base64-encoded signature over the query string parameters.
+  exposes:
+  - type: rest
+    namespace: sso-bindings-slo-rest
+    port: 8080
+    description: REST adapter for SAML 2.0 SSO HTTP Bindings — SLO. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/saml/slo/redirect
+      name: saml-slo-redirect
+      description: REST surface for saml-slo-redirect.
+      operations:
+      - method: GET
+        name: sloredirectbinding
+        description: SLO HTTP Redirect Binding
+        call: sso-bindings-slo.sloredirectbinding
+        with:
+          SAMLRequest: rest.SAMLRequest
+          SAMLResponse: rest.SAMLResponse
+          RelayState: rest.RelayState
+          SigAlg: rest.SigAlg
+          Signature: rest.Signature
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: sso-bindings-slo-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for SAML 2.0 SSO HTTP Bindings — SLO. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: slo-http-redirect-binding
+      description: SLO HTTP Redirect Binding
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: sso-bindings-slo.sloredirectbinding
+      with:
+        SAMLRequest: tools.SAMLRequest
+        SAMLResponse: tools.SAMLResponse
+        RelayState: tools.RelayState
+        SigAlg: tools.SigAlg
+        Signature: tools.Signature
+      outputParameters:
+      - type: object
+        mapping: $.
