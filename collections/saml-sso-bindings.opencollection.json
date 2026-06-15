@@ -1,0 +1,164 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SAML 2.0 SSO HTTP Bindings",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SSO",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "SSO HTTP Redirect Binding",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://idp.example.com/saml/sso/redirect",
+            "params": [
+              {
+                "name": "SAMLRequest",
+                "value": "",
+                "type": "query",
+                "description": "The deflated, base64-encoded, and URL-encoded SAML AuthnRequest XML message. The message MUST be deflated using the DEFLATE compression method (RFC 1951) before base64 encoding."
+              },
+              {
+                "name": "RelayState",
+                "value": "",
+                "type": "query",
+                "description": "An opaque reference to state information maintained at the Service Provider. The value MUST NOT exceed 80 bytes in length and MUST be integrity-protected by the entity creating it."
+              },
+              {
+                "name": "SigAlg",
+                "value": "",
+                "type": "query",
+                "description": "The URI identifying the signature algorithm used to sign the request. Required when the request is signed."
+              },
+              {
+                "name": "Signature",
+                "value": "",
+                "type": "query",
+                "description": "The base64-encoded and URL-encoded signature value computed over the SAMLRequest, RelayState (if present), and SigAlg query string parameters."
+              }
+            ]
+          },
+          "docs": "Initiates SAML 2.0 Single Sign-On using the HTTP Redirect Binding (Section 3.4 of saml-bindings-2.0-os). The AuthnRequest is encoded, deflated, and base64-encoded as a query parameter. The Identity Provider processes the request and responds with an authentication challenge or redirects back to the Service Provider with a SAML Response."
+        },
+        {
+          "info": {
+            "name": "SSO HTTP POST Binding",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://idp.example.com/saml/sso/post",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            }
+          },
+          "docs": "Processes a SAML 2.0 AuthnRequest or Response using the HTTP POST Binding (Section 3.5 of saml-bindings-2.0-os). The SAML message is base64-encoded and submitted as a form parameter. This binding is typically used for the SAML Response from the Identity Provider to the Service Provider Assertion Consumer Service (ACS) URL."
+        },
+        {
+          "info": {
+            "name": "Assertion Consumer Service (ACS)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://idp.example.com/saml/acs",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "SAMLResponse",
+                  "value": ""
+                },
+                {
+                  "name": "RelayState",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "The Assertion Consumer Service endpoint at the Service Provider receives and processes SAML Responses from the Identity Provider via the HTTP POST Binding. Validates the SAML Response, extracts the authentication assertion, and establishes a local security context for the user."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "SLO",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "SLO HTTP Redirect Binding",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://idp.example.com/saml/slo/redirect",
+            "params": [
+              {
+                "name": "SAMLRequest",
+                "value": "",
+                "type": "query",
+                "description": "The deflated, base64-encoded LogoutRequest message. Either SAMLRequest or SAMLResponse MUST be present."
+              },
+              {
+                "name": "SAMLResponse",
+                "value": "",
+                "type": "query",
+                "description": "The deflated, base64-encoded LogoutResponse message. Either SAMLRequest or SAMLResponse MUST be present."
+              },
+              {
+                "name": "RelayState",
+                "value": "",
+                "type": "query",
+                "description": "Opaque state information maintained between request and response."
+              },
+              {
+                "name": "SigAlg",
+                "value": "",
+                "type": "query",
+                "description": "URI identifying the signature algorithm."
+              },
+              {
+                "name": "Signature",
+                "value": "",
+                "type": "query",
+                "description": "Base64-encoded signature over the query string parameters."
+              }
+            ]
+          },
+          "docs": "Initiates or processes a SAML 2.0 Single Logout request or response using the HTTP Redirect Binding. Terminates sessions at the Identity Provider and participating Service Providers."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Metadata",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "SAML 2.0 Metadata Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://idp.example.com/saml/metadata"
+          },
+          "docs": "Returns the SAML 2.0 metadata document for the entity (Identity Provider or Service Provider) as defined in the OASIS SAML 2.0 Metadata specification (saml-metadata-2.0-os). The metadata document describes the entity's supported bindings, endpoints, certificates, and capabilities."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
