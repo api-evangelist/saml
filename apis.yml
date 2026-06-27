@@ -71,7 +71,7 @@ common:
   - type: SpectralRules
     url: rules/saml-rules.yml
     title: SAML API Spectral Rules
-  - type: Example
+  - type: Examples
     url: examples/saml-sso-redirect-example.json
     title: SAML SSO HTTP Redirect Binding Example
   - type: Vocabulary
