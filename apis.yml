@@ -38,6 +38,8 @@ apis:
       - type: Documentation
         url: https://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf
 common:
+  - type: AgenticAccess
+    url: agentic-access/saml-agentic-access.yml
   - type: Documentation
     url: https://www.oasis-open.org/standard/saml/
     title: SAML 2.0 OASIS Standard
