@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: SAML 2.0 SSO HTTP Bindings Metadata SLO API
+  description: OpenAPI specification for SAML 2.0 Single Sign-On HTTP bindings as defined in the OASIS SAML 2.0 Bindings specification (saml-bindings-2.0-os). Covers the HTTP Redirect Binding and HTTP POST Binding used for AuthnRequest and Response message exchange between Service Providers and Identity Providers.
+  version: 1.0.0
+  contact:
+    name: Kin Lane
+    email: info@apievangelist.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: https://idp.example.com
+  description: SAML 2.0 Identity Provider
+- url: https://sp.example.com
+  description: SAML 2.0 Service Provider
+tags:
+- name: SLO
+  description: SAML 2.0 Single Logout operations.
+paths:
+  /saml/slo/redirect:
+    get:
+      operationId: sloRedirectBinding
+      summary: SLO HTTP Redirect Binding
+      description: Initiates or processes a SAML 2.0 Single Logout request or response using the HTTP Redirect Binding. Terminates sessions at the Identity Provider and participating Service Providers.
+      tags:
+      - SLO
+      parameters:
+      - name: SAMLRequest
+        in: query
+        required: false
+        description: The deflated, base64-encoded LogoutRequest message. Either SAMLRequest or SAMLResponse MUST be present.
+        schema:
+          type: string
+      - name: SAMLResponse
+        in: query
+        required: false
+        description: The deflated, base64-encoded LogoutResponse message. Either SAMLRequest or SAMLResponse MUST be present.
+        schema:
+          type: string
+      - name: RelayState
+        in: query
+        required: false
+        description: Opaque state information maintained between request and response.
+        schema:
+          type: string
+          maxLength: 80
+      - name: SigAlg
+        in: query
+        required: false
+        description: URI identifying the signature algorithm.
+        schema:
+          type: string
+          format: uri
+      - name: Signature
+        in: query
+        required: false
+        description: Base64-encoded signature over the query string parameters.
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to next participant in the logout chain.
+          headers:
+            Location:
+              description: URI of the next logout endpoint or final destination.
+              schema:
+                type: string
+                format: uri
+        '400':
+          description: Invalid logout request.
