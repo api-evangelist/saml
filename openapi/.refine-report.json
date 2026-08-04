@@ -1,0 +1,18 @@
+{
+  "provider": "saml",
+  "sources": [
+    "saml-metadata-api-openapi.yml",
+    "saml-slo-api-openapi.yml",
+    "saml-sso-api-openapi.yml"
+  ],
+  "outputs": [
+    "saml-metadata-api-openapi.yml",
+    "saml-slo-api-openapi.yml",
+    "saml-sso-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
