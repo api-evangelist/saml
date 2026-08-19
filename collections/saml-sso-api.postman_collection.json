@@ -1,0 +1,706 @@
+{
+  "item": [
+    {
+      "id": "ba2f3343-cb7f-4d85-922d-2d3f0d6a07b7",
+      "name": "SSO",
+      "description": {
+        "content": "SAML 2.0 Single Sign-On operations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "db06a70c-5875-492b-a228-fbfc5e32b3aa",
+          "name": "SSO HTTP Redirect Binding",
+          "request": {
+            "name": "SSO HTTP Redirect Binding",
+            "description": {
+              "content": "Initiates SAML 2.0 Single Sign-On using the HTTP Redirect Binding (Section 3.4 of saml-bindings-2.0-os). The AuthnRequest is encoded, deflated, and base64-encoded as a query parameter. The Identity Provider processes the request and responds with an authentication challenge or redirects back to the Service Provider with a SAML Response.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "saml",
+                "sso",
+                "redirect"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "SAMLRequest",
+                  "value": "<string>",
+                  "description": "(Required) The deflated, base64-encoded, and URL-encoded SAML AuthnRequest XML message. The message MUST be deflated using the DEFLATE compression method (RFC 1951) before base64 encoding."
+                },
+                {
+                  "disabled": false,
+                  "key": "RelayState",
+                  "value": "<string>",
+                  "description": "An opaque reference to state information maintained at the Service Provider. The value MUST NOT exceed 80 bytes in length and MUST be integrity-protected by the entity creating it."
+                },
+                {
+                  "disabled": false,
+                  "key": "SigAlg",
+                  "value": "<uri>",
+                  "description": "The URI identifying the signature algorithm used to sign the request. Required when the request is signed."
+                },
+                {
+                  "disabled": false,
+                  "key": "Signature",
+                  "value": "<string>",
+                  "description": "The base64-encoded and URL-encoded signature value computed over the SAMLRequest, RelayState (if present), and SigAlg query string parameters."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "88f493e1-745f-4e05-b8af-f6b2a305c763",
+              "name": "Redirect to the Identity Provider login page or back to the Service Provider with a SAML Response via the HTTP Redirect Binding.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "sso",
+                    "redirect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "SAMLRequest",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "RelayState",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "SigAlg",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "Signature",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Found",
+              "code": 302,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Redirect URI with SAML response parameters.",
+                  "key": "Location",
+                  "value": "http://SqXXOLrsQAyXKlMFsPKfS.rgjuQos.FlSCm+T+K2UQN3CtxFicXinFeQenMPTbmnjXVq1UquVW2H1SuHUEkcGCWPFfly"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "472ff539-75d0-453c-9122-feaf77bda6d1",
+              "name": "Malformed SAML request or invalid encoding.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "sso",
+                    "redirect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "SAMLRequest",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "RelayState",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "SigAlg",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "Signature",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>(string)</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "958b83c2-b93a-49d0-9068-73771cd56a61",
+              "name": "Request signature validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "sso",
+                    "redirect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "SAMLRequest",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "RelayState",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "SigAlg",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "Signature",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dce7bef5-8060-422c-a319-d9f9050b24cc",
+          "name": "SSO HTTP POST Binding",
+          "request": {
+            "name": "SSO HTTP POST Binding",
+            "description": {
+              "content": "Processes a SAML 2.0 AuthnRequest or Response using the HTTP POST Binding (Section 3.5 of saml-bindings-2.0-os). The SAML message is base64-encoded and submitted as a form parameter. This binding is typically used for the SAML Response from the Identity Provider to the Service Provider Assertion Consumer Service (ACS) URL.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "saml",
+                "sso",
+                "post"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "text/html"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "SAMLRequest",
+                  "value": "<string>",
+                  "description": "The base64-encoded SAML AuthnRequest XML message. Either SAMLRequest or SAMLResponse MUST be present."
+                },
+                {
+                  "disabled": false,
+                  "key": "SAMLResponse",
+                  "value": "<string>",
+                  "description": "The base64-encoded SAML Response XML message containing authentication assertions. Either SAMLRequest or SAMLResponse MUST be present."
+                },
+                {
+                  "disabled": false,
+                  "key": "RelayState",
+                  "value": "<string>",
+                  "description": "Opaque reference to state information at the message sender. MUST NOT exceed 80 bytes."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "72407fa1-d071-4d19-8c20-f6b397eb7bae",
+              "name": "SAML Response processed successfully. Returns an HTML page with auto-submitting form for browser-based POST binding or confirms successful assertion processing.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "sso",
+                    "post"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "text/html"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "The base64-encoded SAML AuthnRequest XML message. Either SAMLRequest or SAMLResponse MUST be present.",
+                        "type": "text/plain"
+                      },
+                      "key": "SAMLRequest",
+                      "value": "PHNhbWxwOkF1dGhuUmVxdWVzdC4uLg=="
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Opaque reference to state information at the message sender. MUST NOT exceed 80 bytes.",
+                        "type": "text/plain"
+                      },
+                      "key": "RelayState",
+                      "value": "https://sp.example.com/resource"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ed62df6d-7778-4b59-ae19-ea75132ef892",
+              "name": "Invalid or malformed SAML message.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "sso",
+                    "post"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "The base64-encoded SAML AuthnRequest XML message. Either SAMLRequest or SAMLResponse MUST be present.",
+                        "type": "text/plain"
+                      },
+                      "key": "SAMLRequest",
+                      "value": "PHNhbWxwOkF1dGhuUmVxdWVzdC4uLg=="
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Opaque reference to state information at the message sender. MUST NOT exceed 80 bytes.",
+                        "type": "text/plain"
+                      },
+                      "key": "RelayState",
+                      "value": "https://sp.example.com/resource"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>(string)</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "b3d1988d-f082-40b6-ad74-dfee263ab16f",
+              "name": "SAML assertion validation failed or signature invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "sso",
+                    "post"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "The base64-encoded SAML AuthnRequest XML message. Either SAMLRequest or SAMLResponse MUST be present.",
+                        "type": "text/plain"
+                      },
+                      "key": "SAMLRequest",
+                      "value": "PHNhbWxwOkF1dGhuUmVxdWVzdC4uLg=="
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Opaque reference to state information at the message sender. MUST NOT exceed 80 bytes.",
+                        "type": "text/plain"
+                      },
+                      "key": "RelayState",
+                      "value": "https://sp.example.com/resource"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "01c9da57-f0d1-485f-9dc4-d64e8864c835",
+          "name": "Assertion Consumer Service (ACS)",
+          "request": {
+            "name": "Assertion Consumer Service (ACS)",
+            "description": {
+              "content": "The Assertion Consumer Service endpoint at the Service Provider receives and processes SAML Responses from the Identity Provider via the HTTP POST Binding. Validates the SAML Response, extracts the authentication assertion, and establishes a local security context for the user.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "saml",
+                "acs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "SAMLResponse",
+                  "value": "<string>",
+                  "description": "(Required) The base64-encoded SAML Response XML containing one or more authentication assertions from the Identity Provider."
+                },
+                {
+                  "disabled": false,
+                  "key": "RelayState",
+                  "value": "<string>",
+                  "description": "The RelayState value originally sent with the AuthnRequest, returned unchanged by the Identity Provider."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0e39f2ae-31ee-420e-98b4-19690fc27aee",
+              "name": "Successful assertion processing. Redirects the user to the originally requested resource indicated by RelayState.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "acs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The base64-encoded SAML Response XML containing one or more authentication assertions from the Identity Provider.",
+                        "type": "text/plain"
+                      },
+                      "key": "SAMLResponse",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "The RelayState value originally sent with the AuthnRequest, returned unchanged by the Identity Provider.",
+                        "type": "text/plain"
+                      },
+                      "key": "RelayState",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Found",
+              "code": 302,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The target resource URI from the RelayState.",
+                  "key": "Location",
+                  "value": "http://SqXXOLrsQAyXKlMFsPKfS.rgjuQos.FlSCm+T+K2UQN3CtxFicXinFeQenMPTbmnjXVq1UquVW2H1SuHUEkcGCWPFfly"
+                },
+                {
+                  "disabled": false,
+                  "description": "Session cookie establishing the local security context.",
+                  "key": "Set-Cookie",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f22e76eb-4ee8-4013-a987-7e8cc67bf0be",
+              "name": "Invalid SAML Response format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "acs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The base64-encoded SAML Response XML containing one or more authentication assertions from the Identity Provider.",
+                        "type": "text/plain"
+                      },
+                      "key": "SAMLResponse",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "The RelayState value originally sent with the AuthnRequest, returned unchanged by the Identity Provider.",
+                        "type": "text/plain"
+                      },
+                      "key": "RelayState",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "97b36d35-133c-43e7-a5d0-1e544a47e564",
+              "name": "Assertion validation failed due to invalid signature, expired conditions, audience restriction mismatch, or replay detection.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "acs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The base64-encoded SAML Response XML containing one or more authentication assertions from the Identity Provider.",
+                        "type": "text/plain"
+                      },
+                      "key": "SAMLResponse",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "The RelayState value originally sent with the AuthnRequest, returned unchanged by the Identity Provider.",
+                        "type": "text/plain"
+                      },
+                      "key": "RelayState",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://idp.example.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "21f433d2-752c-48dc-a074-21b1ce03fdf5",
+    "name": "SAML 2.0 HTTP Bindings Metadata SSO API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenAPI specification for SAML 2.0 Single Sign-On HTTP bindings as defined in the OASIS SAML 2.0 Bindings specification (saml-bindings-2.0-os). Covers the HTTP Redirect Binding and HTTP POST Binding used for AuthnRequest and Response message exchange between Service Providers and Identity Providers.\n\nContact Support:\n Name: Kin Lane\n Email: info@apievangelist.com",
+      "type": "text/plain"
+    }
+  }
+}

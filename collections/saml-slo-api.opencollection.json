@@ -1,0 +1,61 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SAML 2.0 SSO HTTP Bindings Metadata SLO API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SLO",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "SLO HTTP Redirect Binding",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://idp.example.com/saml/slo/redirect",
+            "params": [
+              {
+                "name": "SAMLRequest",
+                "value": "",
+                "type": "query",
+                "description": "The deflated, base64-encoded LogoutRequest message. Either SAMLRequest or SAMLResponse MUST be present."
+              },
+              {
+                "name": "SAMLResponse",
+                "value": "",
+                "type": "query",
+                "description": "The deflated, base64-encoded LogoutResponse message. Either SAMLRequest or SAMLResponse MUST be present."
+              },
+              {
+                "name": "RelayState",
+                "value": "",
+                "type": "query",
+                "description": "Opaque state information maintained between request and response."
+              },
+              {
+                "name": "SigAlg",
+                "value": "",
+                "type": "query",
+                "description": "URI identifying the signature algorithm."
+              },
+              {
+                "name": "Signature",
+                "value": "",
+                "type": "query",
+                "description": "Base64-encoded signature over the query string parameters."
+              }
+            ]
+          },
+          "docs": "Initiates or processes a SAML 2.0 Single Logout request or response using the HTTP Redirect Binding. Terminates sessions at the Identity Provider and participating Service Providers."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

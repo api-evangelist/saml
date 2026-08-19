@@ -1,0 +1,204 @@
+{
+  "item": [
+    {
+      "id": "8d981cd7-b2bf-4419-afbf-af422b8f407d",
+      "name": "SLO",
+      "description": {
+        "content": "SAML 2.0 Single Logout operations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "45982fe8-9d8a-418b-bb75-4c4e576c77ab",
+          "name": "SLO HTTP Redirect Binding",
+          "request": {
+            "name": "SLO HTTP Redirect Binding",
+            "description": {
+              "content": "Initiates or processes a SAML 2.0 Single Logout request or response using the HTTP Redirect Binding. Terminates sessions at the Identity Provider and participating Service Providers.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "saml",
+                "slo",
+                "redirect"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "SAMLRequest",
+                  "value": "<string>",
+                  "description": "The deflated, base64-encoded LogoutRequest message. Either SAMLRequest or SAMLResponse MUST be present."
+                },
+                {
+                  "disabled": false,
+                  "key": "SAMLResponse",
+                  "value": "<string>",
+                  "description": "The deflated, base64-encoded LogoutResponse message. Either SAMLRequest or SAMLResponse MUST be present."
+                },
+                {
+                  "disabled": false,
+                  "key": "RelayState",
+                  "value": "<string>",
+                  "description": "Opaque state information maintained between request and response."
+                },
+                {
+                  "disabled": false,
+                  "key": "SigAlg",
+                  "value": "<uri>",
+                  "description": "URI identifying the signature algorithm."
+                },
+                {
+                  "disabled": false,
+                  "key": "Signature",
+                  "value": "<string>",
+                  "description": "Base64-encoded signature over the query string parameters."
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "82162ec0-3ab7-4e07-94ff-7d7a80ab4e0b",
+              "name": "Redirect to next participant in the logout chain.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "slo",
+                    "redirect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "SAMLRequest",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "SAMLResponse",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "RelayState",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "SigAlg",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "Signature",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Found",
+              "code": 302,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "URI of the next logout endpoint or final destination.",
+                  "key": "Location",
+                  "value": "https://vgJtvTQROdAGgHWibLLaImLDIC.pgubHbpdV8bORAvsAq0dz.efuOtRnndtEm2FovSZlCJh2coDP.AOgVB,09J"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "fbe9225b-e081-4b7c-aca6-6f251986d7fe",
+              "name": "Invalid logout request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "slo",
+                    "redirect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "SAMLRequest",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "SAMLResponse",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "RelayState",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "SigAlg",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "Signature",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://idp.example.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "5fa5e755-176e-4188-a129-32f74b33096b",
+    "name": "SAML 2.0 SSO HTTP Bindings Metadata SLO API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenAPI specification for SAML 2.0 Single Sign-On HTTP bindings as defined in the OASIS SAML 2.0 Bindings specification (saml-bindings-2.0-os). Covers the HTTP Redirect Binding and HTTP POST Binding used for AuthnRequest and Response message exchange between Service Providers and Identity Providers.\n\nContact Support:\n Name: Kin Lane\n Email: info@apievangelist.com",
+      "type": "text/plain"
+    }
+  }
+}

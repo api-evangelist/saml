@@ -1,0 +1,140 @@
+{
+  "item": [
+    {
+      "id": "1fcc73c7-a25e-471a-a49e-e5005206f2b8",
+      "name": "Metadata",
+      "description": {
+        "content": "SAML 2.0 metadata retrieval.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "370b94ec-d4ed-4348-a49f-b99e7576a845",
+          "name": "SAML 2.0 Metadata Endpoint",
+          "request": {
+            "name": "SAML 2.0 Metadata Endpoint",
+            "description": {
+              "content": "Returns the SAML 2.0 metadata document for the entity (Identity Provider or Service Provider) as defined in the OASIS SAML 2.0 Metadata specification (saml-metadata-2.0-os). The metadata document describes the entity's supported bindings, endpoints, certificates, and capabilities.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "saml",
+                "metadata"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/samlmetadata+xml"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "61a6c279-5c87-4559-a8fc-54f8a6cabf80",
+              "name": "SAML metadata document.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "metadata"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/samlmetadata+xml"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Caching directives for the metadata document.",
+                  "key": "Cache-Control",
+                  "value": "public, max-age=86400"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>(string)</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "7433c7d3-cea1-4410-8c0f-df4ed633dc09",
+              "name": "Metadata not available for this entity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "saml",
+                    "metadata"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://idp.example.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ec10dff7-1695-430f-b1ca-ed8dff5554ef",
+    "name": "SAML 2.0 SSO HTTP Bindings Metadata API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenAPI specification for SAML 2.0 Single Sign-On HTTP bindings as defined in the OASIS SAML 2.0 Bindings specification (saml-bindings-2.0-os). Covers the HTTP Redirect Binding and HTTP POST Binding used for AuthnRequest and Response message exchange between Service Providers and Identity Providers.\n\nContact Support:\n Name: Kin Lane\n Email: info@apievangelist.com",
+      "type": "text/plain"
+    }
+  }
+}
